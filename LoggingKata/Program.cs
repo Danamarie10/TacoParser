@@ -30,16 +30,43 @@ namespace LoggingKata
             var locations = lines.Select(parser.Parse).ToArray();
 
             // DON'T FORGET TO LOG YOUR STEPS
+            logger.LogInfo($"{locations[0]}");
 
             // Now that your Parse method is completed, START BELOW ----------
 
             // TODO: Create two `ITrackable` variables with initial values of `null`. These will be used to store your two taco bells that are the farthest from each other.
             // Create a `double` variable to store the distance
 
+            ITrackable tacoPlace = null;
+            ITrackable tacoPlace2 = null;
+            double distance = 0;
+
             // Include the Geolocation toolbox, so you can compare locations: `using GeoCoordinatePortable;`
 
             //HINT NESTED LOOPS SECTION---------------------
             // Do a loop for your locations to grab each location as the origin (perhaps: `locA`)
+            for ( int i = 0; i < locations.Length; i++ )
+            {
+                var locA = locations[i];
+                GeoCoordinate cordA = new GeoCoordinate(locA.Location.Latitude, locA.Location.Longitude);
+                for (int x = 0; x < locations.Length; x++)
+                {
+                    var locB = locations[x];
+                    GeoCoordinate cordB = new GeoCoordinate(locB.Location.Latitude, locB.Location.Longitude);
+
+                    double distanceBetween = cordA.GetDistanceTo(cordB);
+
+                    if (distanceBetween > distance)
+                    {
+                        distance = distanceBetween;
+                        tacoPlace = locA;
+                        tacoPlace2 = locB;
+                    }
+                }
+            }
+
+
+
 
             // Create a new corA Coordinate with your locA's lat and long
 
@@ -52,6 +79,7 @@ namespace LoggingKata
 
             // Once you've looped through everything, you've found the two Taco Bells farthest away from each other.
 
+            logger.LogInfo($"{tacoPlace.Name} and {tacoPlace2.Name} have the greatest distance that amounts to {distance} meters, which is roughly {Math.Round(distance * 0.00062)} miles in between.");
 
             
         }
